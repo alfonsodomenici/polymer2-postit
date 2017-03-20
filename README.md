@@ -1,1 +1,1 @@
-# Polymer2 Postiti
+# Polymer2 Postit sample app
