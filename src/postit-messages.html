@@ -1,20 +1,12 @@
 <!doctype html>
-<link rel="import"
-    href="../bower_components/polymer/polymer-element.html">
-<link rel="import"
-    href="../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import"
-    href="postit-message.html">
-<link rel="import"
-    href="../bower_components/paper-input/paper-input.html">
-<link rel="import"
-    href="../bower_components/paper-fab/paper-fab.html">
-<link href="../bower_components/iron-icons/iron-icons.html"
-    rel="import">
-<link rel="import"
-    href="postit-create-message.html">
-<link rel="import"
-    href="shared-styles.html">
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="postit-message.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link href="../bower_components/iron-icons/iron-icons.html" rel="import">
+<link rel="import" href="postit-create-message.html">
+<link rel="import" href="shared-styles.html">
 <dom-module id="postit-messages">
     <template>
         <style include="shared-styles">
@@ -31,25 +23,13 @@
                 font-size: 14px;
                 padding: 10px;
             }
-
         </style>
-        <app-location id="redir"
-            route="{{route}}"></app-location>
-        <iron-ajax id="req"
-            method="GET"
-            url="http://localhost:8080/PostIt/resources/messaggi"
-            handle-as="json"
-            on-response="handleResponse"
-            on-error="handleError"></iron-ajax>
+        <app-location id="redir" route="{{route}}"></app-location>
+        <iron-ajax id="req" method="GET" url="http://localhost:8080/PostIt/resources/messaggi" handle-as="json" on-response="handleResponse" on-error="handleError"></iron-ajax>
         <postit-create-message user="[[user]]"></postit-create-message>
-        <dom-repeat items="{{messaggi}}"
-            index-as="index">
+        <dom-repeat items="{{messaggi}}" index-as="index">
             <template>
-                <postit-message user="[[user]]"
-                    message_id="{{item.id}}"
-                    titolo="{{item.titolo}}"
-                    contenuto="{{item.contenuto}}"
-                    time="{{item.dataCreazione}}"></postit-message>
+                <postit-message user="[[user]]" message_id="{{item.id}}" titolo="{{item.titolo}}" contenuto="{{item.contenuto}}" time="{{item.dataCreazione}}"></postit-message>
             </template>
         </dom-repeat>
         <dom-if if="[[noMessages]]">
@@ -73,9 +53,6 @@
                     user: {
                         type: Object,
                     },
-                    headers: {
-                        type: Object,
-                    },
                     messaggi: {
                         type: Object
                     },
@@ -84,7 +61,7 @@
                     }
                 }
             }
-            // Observe the name sub-property on the user object
+
             static get observers() {
                 return ['_userChanged(user.loggedin)']
             }
@@ -119,6 +96,5 @@
             }
         }
         window.customElements.define(PostitMessages.is, PostitMessages);
-
     </script>
 </dom-module>

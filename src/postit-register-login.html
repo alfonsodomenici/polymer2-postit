@@ -1,16 +1,10 @@
 <!doctype html>
-<link rel="import"
-    href="../bower_components/polymer/polymer-element.html">
-<link rel="import"
-    href="../bower_components/paper-input/paper-input.html">
-<link rel="import"
-    href="../bower_components/paper-button/paper-button.html">
-<link rel="import"
-    href="../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import"
-    href="../bower_components/app-route/app-location.html">
-<link rel="import"
-    href="shared-styles.html">
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="shared-styles.html">
 <dom-module id="postit-register-login">
     <template>
         <style include="shared-styles">
@@ -27,17 +21,9 @@
                 font-size: 14px;
                 padding: 10px;
             }
-
         </style>
-        <app-location id="redir"
-            route="{{route}}"></app-location>
-        <iron-ajax id="login"
-            method="post"
-            url="http://localhost:8080/PostIt/resources/utenti/login"
-            handle-as="json"
-            content-type="application/json"
-            on-response="handleResponse"
-            on-error="handleError"> </iron-ajax>
+        <app-location id="redir" route="{{route}}"></app-location>
+        <iron-ajax id="login" method="post" url="http://localhost:8080/PostIt/resources/utenti/login" handle-as="json" content-type="application/json" on-response="handleResponse" on-error="handleError"> </iron-ajax>
         <div class="card">
             <h1 hidden$="{{doRegistration}}">Login</h1>
             <h1 hidden$="{{!doRegistration}}">Inserisci i tuoi dati</h1>
@@ -47,39 +33,26 @@
                     <p class="alert-error"><strong>Error:</strong> [[error]]</p>
                 </template>
             </dom-if>
-            <paper-input label="username"
-                value="{{credential.usr}}"></paper-input>
-            <paper-input label="password"
-                type="password"
-                value="{{credential.pwd}}"></paper-input>
+            <paper-input label="username" value="{{credential.usr}}"></paper-input>
+            <paper-input label="password" type="password" value="{{credential.pwd}}"></paper-input>
             <dom-if if="{{doRegistration}}">
                 <template>
-                    <paper-input label="email"
-                        value="{{credential.email}}"></paper-input>
+                    <paper-input label="email" value="{{credential.email}}"></paper-input>
                     <div>
-                        <paper-button raised
-                            class="primary"
-                            on-tap="postRegistration">Salva</paper-button>
-                        <paper-button raised
-                            class="primary"
-                            on-tap="disableRegistration">Annulla</paper-button>
+                        <paper-button raised class="primary" on-tap="postRegistration">Salva</paper-button>
+                        <paper-button raised class="primary" on-tap="disableRegistration">Annulla</paper-button>
                     </div>
                 </template>
             </dom-if>
             <dom-if if="{{!doRegistration}}">
                 <template>
                     <div>
-                        <paper-button raised
-                            class="primary"
-                            on-tap="postLogin">Login</paper-button>
-                        <paper-button raised
-                            class="primary"
-                            on-tap="enableRegistration">Registrati</paper-button>
+                        <paper-button raised class="primary" on-tap="postLogin">Login</paper-button>
+                        <paper-button raised class="primary" on-tap="enableRegistration">Registrati</paper-button>
                     </div>
                 </template>
             </dom-if>
-            <div id="authenticated"
-                hidden$="[[!user.loggedin]]">
+            <div id="authenticated" hidden$="[[!user.loggedin]]">
                 <h2>Hello, [[user.name]]!</h2>
                 <p>You are currently logged in. You can access
                     <a href="/messages">Messaggi</a>!</p>
@@ -129,8 +102,9 @@
                 this.$.login.generateRequest();
             }
             handleResponse(event) {
-                console.log("handleResponse");
+
                 let response = event.detail.response;
+                console.log("handleResponse Login: " + JSON.stringify(response));
                 if (this.doRegistration) {
                     this.doRegistration = false;
                     return;
@@ -138,6 +112,7 @@
                 if (response.id_token) {
                     this.error = '';
                     this.set('route.path', '/messages');
+                    console.log("Fire user-logged-in event....");
                     this.dispatchEvent(new CustomEvent('user-logged-in', {
                         bubbles: true,
                         composed: true,
@@ -156,6 +131,5 @@
             }
         }
         window.customElements.define(PostitRegisterLogin.is, PostitRegisterLogin);
-
     </script>
 </dom-module>

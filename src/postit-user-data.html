@@ -1,27 +1,17 @@
 <!doctype html>
-<link rel="import"
-    href="../bower_components/polymer/polymer-element.html">
-<link rel="import"
-    href="../bower_components/app-storage/app-localstorage/app-localstorage-document.html">
-<link rel="import"
-    href="shared-styles.html">
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-storage/app-localstorage/app-localstorage-document.html">
+<link rel="import" href="shared-styles.html">
 <dom-module id="postit-user-data">
     <template>
-        <app-localstorage-document key="postit-user-data"
-            data="{{user}}"></app-localstorage-document>
+        <app-localstorage-document key="postit-user-data" data="{{user}}"></app-localstorage-document>
     </template>
     <script>
         class PostitUserData extends Polymer.Element {
             static get is() {
                 return 'postit-user-data';
             }
-            constructor() {
-                super();
-                console.log("construct PostitUserData")
-            }
-            ready() {
-                super.ready();
-            }
+
             static get properties() {
                 return {
                     user: {
@@ -39,6 +29,5 @@
             }
         }
         window.customElements.define(PostitUserData.is, PostitUserData);
-
     </script>
 </dom-module>

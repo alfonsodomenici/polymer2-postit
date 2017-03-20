@@ -8,36 +8,21 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
-<link rel="import"
-    href="../bower_components/polymer/polymer-element.html">
-<link rel="import"
-    href="../bower_components/app-layout/app-drawer/app-drawer.html">
-<link rel="import"
-    href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
-<link rel="import"
-    href="../bower_components/app-layout/app-header/app-header.html">
-<link rel="import"
-    href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
-<link rel="import"
-    href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
-<link rel="import"
-    href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
-<link rel="import"
-    href="../bower_components/app-route/app-location.html">
-<link rel="import"
-    href="../bower_components/app-route/app-route.html">
-<link rel="import"
-    href="../bower_components/iron-pages/iron-pages.html">
-<link rel="import"
-    href="../bower_components/iron-selector/iron-selector.html">
-<link rel="import"
-    href="../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import"
-    href="postit-user-data.html">
-<link rel="import"
-    href="postit-logout.html">
-<link rel="import"
-    href="postit-icons.html">
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="postit-user-data.html">
+<link rel="import" href="postit-logout.html">
+<link rel="import" href="postit-icons.html">
 <dom-module id="postit-app">
     <template>
         <style>
@@ -76,48 +61,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 color: black;
                 font-weight: bold;
             }
-
         </style>
-        <postit-user-data id="user"
-            user="{{user}}"></postit-user-data>
+        <postit-user-data id="user" user="{{user}}"></postit-user-data>
         <app-location route="{{route}}"></app-location>
-        <app-route route="{{route}}"
-            pattern="/:page"
-            data="{{routeData}}"
-            tail="{{subroute}}"></app-route>
+        <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
         <app-drawer-layout fullbleed>
             <!-- Drawer content -->
-            <app-drawer id="drawer"
-                slot="drawer">
+            <app-drawer id="drawer" slot="drawer">
                 <app-toolbar>Menu</app-toolbar>
-                <iron-selector selected="[[page]]"
-                    attr-for-selected="name"
-                    class="drawer-list"
-                    role="navigation">
-                    <a name="home"
-                        href="/home">Home</a>
+                <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+                    <a name="home" href="/home">Home</a>
                     <dom-if if="{{user.loggedin}}">
                         <template>
-                            <a name="messages"
-                                href="/messages">Messaggi</a>
+                            <a name="messages" href="/messages">Messaggi</a>
                         </template>
                     </dom-if>
                 </iron-selector>
             </app-drawer>
             <!-- Main content -->
             <app-header-layout has-scrolling-region>
-                <app-header slot="header"
-                    condenses
-                    reveals
-                    effects="waterfall">
+                <app-header slot="header" condenses reveals effects="waterfall">
                     <app-toolbar>
-                        <paper-icon-button icon="postit-icons:menu"
-                            drawer-toggle></paper-icon-button>
+                        <paper-icon-button icon="postit-icons:menu" drawer-toggle></paper-icon-button>
                         <div main-title>Postit App</div>
                         <dom-if if="{{!user.loggedin}}">
                             <template>
-                                <a name="register-login"
-                                    href="/register-login">Login</a>
+                                <a name="register-login" href="/register-login">Login</a>
                             </template>
                         </dom-if>
                         <dom-if if="{{user.loggedin}}">
@@ -128,17 +97,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         </dom-if>
                     </app-toolbar>
                 </app-header>
-                <iron-pages selected="[[page]]"
-                    attr-for-selected="name"
-                    fallback-selection="view404"
-                    role="main">
-                    <postit-home name="home"
-                        user="[[user]]"></postit-home>
-                    <postit-messages id="pmessages"
-                        name="messages"
-                        user="[[user]]"></postit-messages>
-                    <postit-register-login name="register-login"
-                        user="[[user]]"></postit-register-login>
+                <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="view404" role="main">
+                    <postit-home name="home" user="[[user]]"></postit-home>
+                    <postit-messages name="messages" user="[[user]]"></postit-messages>
+                    <postit-register-login name="register-login" user="[[user]]"></postit-register-login>
                     <postit-view404 name="view404"></postit-view404>
                 </iron-pages>
             </app-header-layout>
@@ -195,7 +157,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 this.page = 'view404';
             }
             _onUserLoggedIn(event) {
-                console.log("onUserLoggedIn()..." + JSON.stringify(event.detail));
+                console.log("Handle user-logged-in -> onUserLoggedIn()..." + JSON.stringify(event.detail));
                 this.$.user.setUser(event.detail);
                 this._fireNeedMessagesReload();
             }
@@ -205,16 +167,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 this._fireNeedMessagesReload();
                 this.set('route.path', '/home');
             }
-            _fireNeedMessagesReload() {
-                console.log("_fireNeedMessagesReload()");
-                this.dispatchEvent(new CustomEvent('need-messages-reload', {
-                    bubbles: true,
-                    composed: true,
-                    detail: {}
-                }));
-            }
+            /*
+                        _fireNeedMessagesReload() {
+                            console.log("_fireNeedMessagesReload()");
+                            this.dispatchEvent(new CustomEvent('need-messages-reload', {
+                                bubbles: true,
+                                composed: true,
+                                detail: {}
+                            }));
+                        }
+                        */
         }
         window.customElements.define(PostitApp.is, PostitApp);
-
     </script>
 </dom-module> } }
