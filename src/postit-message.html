@@ -1,0 +1,154 @@
+<!doctype html>
+<link rel="import"
+    href="../bower_components/polymer/polymer-element.html">
+<link rel="import"
+    href="shared-styles.html">
+<link href="../bower_components/iron-icons/iron-icons.html"
+    rel="import">
+<link href="../bower_components/paper-fab/paper-fab.html"
+    rel="import">
+<link rel="import"
+    href="../bower_components/paper-input/paper-input.html">
+<link rel="import"
+    href="../bower_components/iron-ajax/iron-ajax.html">
+<dom-module id="postit-message">
+    <template>
+        <style include="shared-styles">
+             :host {
+                display: block;
+                padding: 10px;
+            }
+
+            paper-fab {
+                position: absolute;
+                right: 50px;
+            }
+
+            paper-fab.delete {
+                right: 100px;
+            }
+
+            .hide {
+                visibility: hidden;
+            }
+
+            .done {
+                background: green;
+            }
+
+        </style>
+        <iron-ajax id="req"
+            method="PUT"
+            url="http://localhost:8080/PostIt/resources/messaggi/"
+            handle-as="json"
+            on-response="handleResponse"
+            on-error="handleError"> </iron-ajax>
+        <div class="card">
+            <paper-fab id="btnEdit"
+                icon="icons:create"
+                on-tap="doEdit"
+                class="edit"
+                mini></paper-fab>
+            <paper-fab id="btnDone"
+                icon="icons:done"
+                on-tap="doSave"
+                class="done hide"
+                mini></paper-fab>
+            <paper-fab id="btnDelete"
+                icon="icons:delete"
+                on-tap="doDelete"
+                class="delete"
+                mini></paper-fab>
+            <div hidden$="{{editing}}"> <span>[[titolo]]</span> </div>
+            <paper-input label="Titolo"
+                hidden$="{{!editing}}"
+                value="{{titolo}}"></paper-input>
+            <div hidden$="{{editing}}"> <span>[[contenuto]]</span> </div>
+            <paper-input label="Testo"
+                value="{{contenuto}}"
+                hidden$="{{!editing}}"></paper-input>
+            <div> <span>[[time]]</span> </div>
+        </div>
+    </template>
+    <script>
+        class PostitMessage extends Polymer.Element {
+            static get is() {
+                return 'postit-message';
+            }
+            static get properties() {
+                return {
+                    user: {
+                        type: Object,
+                    },
+                    message_id: {
+                        type: Number,
+                    },
+                    titolo: {
+                        type: String,
+                    },
+                    contenuto: {
+                        type: String,
+                    },
+                    time: {
+                        type: String,
+                    },
+                    editing: {
+                        type: Boolean,
+                        value: false
+                    }
+                }
+            }
+            doEdit() {
+                this.editing = true;
+                let btnEdit = Polymer.dom(this.root).querySelector('#btnEdit');
+                btnEdit.style.visibility = 'hidden';
+                let btnDone = Polymer.dom(this.root).querySelector('#btnDone');
+                btnDone.style.visibility = 'visible';
+            }
+            doSave() {
+                this.$.req.method = "PUT"
+                this.$.req.url = "http://localhost:8080/PostIt/resources/messaggi/" + this.message_id
+                this.$.req.contentType = "application/json"
+                this.$.req.headers = {
+                    id_token: this.user.token
+                };
+                this.$.req.body = {
+                    id: this.message_id,
+                    titolo: this.titolo,
+                    contenuto: this.contenuto,
+                    dataCreazione: this.time
+                };
+                this.$.req.generateRequest();
+                this.editing = false;
+                let btnEdit = Polymer.dom(this.root).querySelector('#btnEdit');
+                btnEdit.style.visibility = 'visible';
+                let btnDone = Polymer.dom(this.root).querySelector('#btnDone');
+                btnDone.style.visibility = 'hidden';
+            }
+            doDelete() {
+                console.log("doDelete ()");
+                this.$.req.method = "DELETE"
+                this.$.req.url = "http://localhost:8080/PostIt/resources/messaggi/" + this.message_id
+                this.$.req.headers = {
+                    id_token: this.user.token
+                };
+                this.$.req.generateRequest();
+            }
+            handleResponse(e) {
+                console.log("handleResponse");
+                this.dispatchEvent(new CustomEvent('message-updated', {
+                    bubbles: true,
+                    composed: true,
+                    detail: {}
+                }));
+            }
+            handleError(e) {
+                if (e.detail.request.status === 401) {
+                    this.set('route.path', '/register-login');
+                }
+            }
+        }
+        window.customElements.define(PostitMessage.is, PostitMessage);
+
+    </script>
+</dom-module>

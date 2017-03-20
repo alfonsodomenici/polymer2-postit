@@ -1,0 +1,62 @@
+<!doctype html>
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="shared-styles.html">
+<dom-module id="postit-logout">
+    <template>
+        <style include="shared-styles">
+             :host {
+                display: block;
+                padding: 10px;
+            }
+
+            a {
+                color: #fff;
+                display: inline-block;
+                font-size: 13px;
+            }
+
+        </style>
+        <template is="dom-if" if="{{!link}}">
+            <paper-button raised on-tap="logout">Log Out</paper-button>
+        </template>
+        <template is="dom-if" if="{{link}}">
+            <a on-tap="logout" href="#">Log Out</a>
+        </template>
+    </template>
+    <script>
+        class PostitLogout extends Polymer.Element {
+            static get is() {
+                return 'postit-logout';
+            }
+            static get properties() {
+                return {
+                    user: {
+                        type: Object,
+                    },
+                    link: {
+                        type: Boolean,
+                        value: false
+                    }
+                }
+            }
+            constructor() {
+                super();
+            }
+            logout() {
+                console.log("logout");
+                this.dispatchEvent(new CustomEvent('user-logged-out', {
+                    bubbles: true,
+                    composed: true,
+                    detail: {
+                        name: '',
+                        token: '',
+                        loggedin: false
+                    }
+                }));
+            }
+        }
+        window.customElements.define(PostitLogout.is, PostitLogout);
+
+    </script>
+</dom-module>
