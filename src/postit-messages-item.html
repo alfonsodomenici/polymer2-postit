@@ -1,0 +1,64 @@
+<!doctype html>
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="shared-styles.html">
+<dom-module id="postit-messages-item">
+    <template>
+        <style include="shared-styles">
+             :host {
+                display: block;
+                padding: 10px;
+            }
+
+            paper-fab {
+                position: absolute;
+                right: 50px;
+            }
+
+            paper-fab.delete {
+                right: 100px;
+            }
+
+            .hide {
+                visibility: hidden;
+            }
+
+            .done {
+                background: green;
+            }
+
+        </style>
+        <p> ciao </p>
+        <div class="card">
+            <div> <span>[[msg.titolo]]</span> </div>
+            <div> <span>[[msg.contenuto]]</span> </div>
+            <div> <span>[[msg.time]]</span> </div>
+        </div>
+    </template>
+    <script>
+        class PostitMessagesItem extends Polymer.Element {
+            constructor() {
+                super();
+                console.log("PostitMessagesItem().....")
+            }
+            ready() {
+                super.ready();
+                console.log("PostitMessagesItem.ready().." + JSON.parse(this.msg));
+            }
+            static get is() {
+                return 'postit-messages-item';
+            }
+            static get properties() {
+                return {
+                    user: {
+                        type: Object,
+                    },
+                    msg: {
+                        type: Object,
+                    }
+                }
+            }
+        }
+        window.customElements.define(PostitMessagesItem.is, PostitMessagesItem);
+
+    </script>
+</dom-module>

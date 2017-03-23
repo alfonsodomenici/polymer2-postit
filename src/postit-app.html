@@ -9,8 +9,6 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
-<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
@@ -18,17 +16,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
-<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="postit-user-data.html">
-<link rel="import" href="postit-logout.html">
+<link rel="import" href="postit-messages-data.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="postit-icons.html">
 <dom-module id="postit-app">
     <template>
         <style>
              :host {
-                --app-primary-color: #4285f4;
-                --app-secondary-color: black;
+                --app-primary-color: #202020;
+                --app-secondary-color: #757575;
                 display: block;
             }
 
@@ -37,74 +35,56 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
 
             app-header {
-                color: #fff;
-                background-color: var(--app-primary-color);
+                background-color: rgba(255, 255, 255, 0.95);
+                --app-header-shadow: {
+                    box-shadow: inset 0px 5px 6px -3px rgba(0, 0, 0, 0.2);
+                    height: 10px;
+                    bottom: -10px;
+                }
+                ;
             }
 
-            app-header paper-icon-button {
-                --paper-icon-button-ink-color: white;
+            paper-icon-button {
+                color: var(--app-primary-color);
             }
 
-            .drawer-list {
-                margin: 0 20px;
+            .logo {
+                text-align: center;
             }
 
-            .drawer-list a {
-                display: block;
-                padding: 0 16px;
-                text-decoration: none;
-                color: var(--app-secondary-color);
-                line-height: 40px;
-            }
-
-            .drawer-list a.iron-selected {
-                color: black;
-                font-weight: bold;
-            }
         </style>
         <postit-user-data id="user" user="{{user}}"></postit-user-data>
+        <postit-messages-data id="data" user="[[user]]" messages="{{messages}}"></postit-messages-data>
         <app-location route="{{route}}"></app-location>
         <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
-        <app-drawer-layout fullbleed>
-            <!-- Drawer content -->
-            <app-drawer id="drawer" slot="drawer">
-                <app-toolbar>Menu</app-toolbar>
-                <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-                    <a name="home" href="/home">Home</a>
-                    <dom-if if="{{user.loggedin}}">
-                        <template>
-                            <a name="messages" href="/messages">Messaggi</a>
-                        </template>
-                    </dom-if>
-                </iron-selector>
-            </app-drawer>
-            <!-- Main content -->
-            <app-header-layout has-scrolling-region>
-                <app-header slot="header" condenses reveals effects="waterfall">
-                    <app-toolbar>
-                        <paper-icon-button icon="postit-icons:menu" drawer-toggle></paper-icon-button>
-                        <div main-title>Postit App</div>
-                        <dom-if if="{{!user.loggedin}}">
-                            <template>
-                                <a name="register-login" href="/register-login">Login</a>
-                            </template>
-                        </dom-if>
-                        <dom-if if="{{user.loggedin}}">
-                            <template>
-                                <p> Hi {{user.name}} &nbsp; </p>
-                                <postit-logout></postit-logout>
-                            </template>
-                        </dom-if>
-                    </app-toolbar>
-                </app-header>
-                <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="view404" role="main">
-                    <postit-home name="home" user="[[user]]"></postit-home>
-                    <postit-messages name="messages" user="[[user]]"></postit-messages>
-                    <postit-register-login name="register-login" user="[[user]]"></postit-register-login>
-                    <postit-view404 name="view404"></postit-view404>
-                </iron-pages>
-            </app-header-layout>
-        </app-drawer-layout>
+        <app-header role="navigation" id="header" effects="waterfall" condenses reveals>
+            <app-toolbar>
+                <div class="logo" main-title>
+                    <a href="/" aria-label="SHOP Home">Postit</a>
+                </div>
+                <dom-if if="{{!user.loggedin}}">
+                    <template>
+                        <a name="register-login" href="/register-login" icon="icons:lock-open">
+                            <paper-icon-button icon="icons:lock" aria-label="Login"></paper-icon-button>
+                        </a>
+                    </template>
+                </dom-if>
+                <dom-if if="{{user.loggedin}}">
+                    <template>
+                        <p> Hi {{user.name}} &nbsp; </p>
+                        <div>
+                            <paper-icon-button on-click="_onUserLoggedOut" icon="icons:lock-open" aria-label="Logout"></paper-icon-button>
+                        </div>
+                    </template>
+                </dom-if>
+            </app-toolbar>
+        </app-header>
+        <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="view404" role="main">
+            <postit-home name="home" user="[[user]]"></postit-home>
+            <postit-messages name="messages" user="[[user]]" route="[[subroute]]"></postit-messages>
+            <postit-register-login name="register-login" user="[[user]]"></postit-register-login>
+            <postit-view404 name="view404"></postit-view404>
+        </iron-pages>
     </template>
     <script>
         class PostitApp extends Polymer.Element {
@@ -117,7 +97,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             ready() {
                 super.ready();
                 this.addEventListener('user-logged-in', (e) => this._onUserLoggedIn(e));
-                this.addEventListener('user-logged-out', (e) => this._onUserLoggedOut(e));
             }
             static get is() {
                 return 'postit-app';
@@ -143,41 +122,35 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 // If no page was found in the route data, page will be an empty string.
                 // Deault to 'view1' in that case.
                 this.page = page || 'home';
-                // Close a non-persistent drawer when the page & route are changed.
-                if (!this.$.drawer.persistent) {
-                    this.$.drawer.close();
-                }
             }
             _pageChanged(page) {
                 // Load page import on demand. Show 404 page if fails
                 var resolvedPageUrl = this.resolveUrl('postit-' + page + '.html');
-                Polymer.importHref(resolvedPageUrl, null, this._showPage404.bind(this), true);
+                Polymer.importHref(resolvedPageUrl, null, this._showPage404.bind(this),
+                    true);
             }
             _showPage404() {
                 this.page = 'view404';
             }
             _onUserLoggedIn(event) {
-                console.log("Handle user-logged-in -> onUserLoggedIn()..." + JSON.stringify(event.detail));
+                console.log("Handle user-logged-in -> onUserLoggedIn()..." + JSON.stringify(
+                    event.detail));
                 this.$.user.setUser(event.detail);
-                this._fireNeedMessagesReload();
+                this.$.data.refresh();
+                this.set('route.path', '/messages');
             }
             _onUserLoggedOut(event) {
                 console.log("onUserLoggedOut()..." + event.detail);
-                this.$.user.setUser(event.detail);
-                this._fireNeedMessagesReload();
+                this.$.user.setUser({
+                    name: '',
+                    token: '',
+                    loggedin: false
+                });
+                this.$.data.refresh();
                 this.set('route.path', '/home');
             }
-            /*
-                        _fireNeedMessagesReload() {
-                            console.log("_fireNeedMessagesReload()");
-                            this.dispatchEvent(new CustomEvent('need-messages-reload', {
-                                bubbles: true,
-                                composed: true,
-                                detail: {}
-                            }));
-                        }
-                        */
         }
         window.customElements.define(PostitApp.is, PostitApp);
+
     </script>
 </dom-module> } }

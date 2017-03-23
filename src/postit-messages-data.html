@@ -1,0 +1,85 @@
+<!doctype html>
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="shared-styles.html">
+<dom-module id="postit-messages-data">
+    <template>
+        <style include="shared-styles">
+             :host {
+                display: block;
+                padding: 10px;
+            }
+
+        </style>
+        <iron-ajax auto id="rMessages" method="GET" url="http://localhost:8080/PostIt/resources/messaggi"
+            handle-as="json" on-response="_handleFetchMessages" on-error="_handleError"></iron-ajax>
+        <iron-ajax id="rMessage" method="GET" url="http://localhost:8080/PostIt/resources/messaggi/"
+            handle-as="json" on-response="_handleFetchMessage" on-error="_handleError"> </iron-ajax>
+        <iron-ajax id="rMessageUpd" method="PUT" url="http://localhost:8080/PostIt/resources/messaggi/"
+            handle-as="json" on-response="_handleUpdateMessage" on-error="_handleError"> </iron-ajax>
+        <iron-ajax id="rMessageDel" method="DELETE" url="http://localhost:8080/PostIt/resources/messaggi/"
+            handle-as="json" on-response="_handleDeleteMessage" on-error="_handleError"> </iron-ajax>
+    </template>
+    <script>
+        class PostitMessagesData extends Polymer.Element {
+            constructor() {
+                super();
+            }
+            connectedCallback() {
+                super.connectedCallback();
+            }
+            ready() {
+                super.ready();
+                //this._fetchMessages();
+            }
+            static get is() {
+                return 'postit-messages-data';
+            }
+            static get properties() {
+                return {
+                    messages: {
+                        type: Array,
+                        notifies: true
+                    },
+                    message: {
+                        type: Object,
+                        notifies: true
+                    },
+                    message_id: {
+                        type: Number,
+                        notifies: true
+                    }
+                }
+            }
+            static get observers() {
+                return [
+                    /* observer array just like 1.x */
+                    '_myPropChanged(myProp.*)'
+                ]
+            }
+            refresh() {
+                this._fetchMessages();
+            }
+            myPropChanged(changeRecord) {}
+            _handleFetchMessages(e) {
+                this.messages = e.detail.response;
+                console.log(this.messages);
+            }
+            _handleFetchMessage() {}
+            _handleUpdateMessage() {}
+            _handleDeleteMessage() {}
+            _fetchMessages() {
+                console.log("fetch messages...");
+                this.$.rMessages.headers = {
+                    id_token: this.user.token
+                };
+                this.$.rMessages.generateRequest();
+            }
+            _handleError(e) {
+                console.log("Error..." + e.detail.error);
+            }
+        }
+        window.customElements.define(PostitMessagesData.is, PostitMessagesData);
+
+    </script>
+</dom-module>

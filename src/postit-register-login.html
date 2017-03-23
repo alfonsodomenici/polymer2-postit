@@ -3,7 +3,6 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="shared-styles.html">
 <dom-module id="postit-register-login">
     <template>
@@ -21,9 +20,11 @@
                 font-size: 14px;
                 padding: 10px;
             }
+
         </style>
-        <app-location id="redir" route="{{route}}"></app-location>
-        <iron-ajax id="login" method="post" url="http://localhost:8080/PostIt/resources/utenti/login" handle-as="json" content-type="application/json" on-response="handleResponse" on-error="handleError"> </iron-ajax>
+        <iron-ajax id="login" method="post" url="http://localhost:8080/PostIt/resources/utenti/login"
+            handle-as="json" content-type="application/json" on-response="handleResponse" on-error="handleError">
+        </iron-ajax>
         <div class="card">
             <h1 hidden$="{{doRegistration}}">Login</h1>
             <h1 hidden$="{{!doRegistration}}">Inserisci i tuoi dati</h1>
@@ -102,7 +103,6 @@
                 this.$.login.generateRequest();
             }
             handleResponse(event) {
-
                 let response = event.detail.response;
                 console.log("handleResponse Login: " + JSON.stringify(response));
                 if (this.doRegistration) {
@@ -111,7 +111,6 @@
                 }
                 if (response.id_token) {
                     this.error = '';
-                    this.set('route.path', '/messages');
                     console.log("Fire user-logged-in event....");
                     this.dispatchEvent(new CustomEvent('user-logged-in', {
                         bubbles: true,
@@ -127,9 +126,11 @@
             }
             handleError(event) {
                 console.log(event.detail.request.xhr);
-                this.doRegistration ? this.error = "Registrazione fallita..." : this.error = "Login fallita..";
+                this.doRegistration ? this.error = "Registrazione fallita..." : this.error =
+                    "Login fallita..";
             }
         }
         window.customElements.define(PostitRegisterLogin.is, PostitRegisterLogin);
+
     </script>
 </dom-module>
